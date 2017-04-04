@@ -18,6 +18,7 @@ DallasTemperature sensors(&oneWire);
 LiquidCrystal lcd(12, 13, 4, 5, 6, 7);
 DeviceAddress sensorOne = { 0x28, 0xFF, 0x63, 0xC2, 0x85, 0x16, 0x04, 0x59 };
 
+/*laten staan, te gebruiken bij nieuwe sensoren om het address te vinden*/
 void printAddress(DeviceAddress deviceAddress)
 {
   for (uint8_t i = 0; i < 8; i++)
@@ -43,11 +44,12 @@ void setup(void)
  lcd.setCursor(6,1);
  lcd.print(char(223));
  lcd.print("C");
- lcd.setCursor(0,1);
- lcd.print("   ");
- Serial.println("Dallas Temperature IC Control Library Demo");
- // Start up the library
  sensors.begin();
+ Serial.print("Device address is: ");
+ printAddress(sensorOne);
+ Serial.println("");
+ Serial.print("Resolution is: ");
+ Serial.println(sensors.getResolution(sensorOne));
 }
 void loop(void)
 {
