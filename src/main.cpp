@@ -18,6 +18,9 @@ DallasTemperature sensors(&oneWire);
 LiquidCrystal lcd(12, 13, 4, 5, 6, 7);
 DeviceAddress sensorOne = { 0x28, 0xFF, 0x63, 0xC2, 0x85, 0x16, 0x04, 0x59 };
 
+int relayPin = 11;
+float tempCur = 0;
+
 /*laten staan, te gebruiken bij nieuwe sensoren om het address te vinden*/
 void printAddress(DeviceAddress deviceAddress)
 {
@@ -34,6 +37,9 @@ void setup(void)
 {
  // start serial port
  Serial.begin(9600);
+
+pinMode(relayPin, OUTPUT);
+
  lcd.begin(16, 2);
  lcd.print("Send Nudes");
  lcd.setCursor(0,1);
@@ -51,11 +57,20 @@ void setup(void)
  Serial.print("Resolution is: ");
  Serial.println(sensors.getResolution(sensorOne));
 }
+
 void loop(void)
 {
 sensors.requestTemperatures(); // Send the command to get temperature readings
 /********************************************************************/
 lcd.setCursor(0,1);
+tempCur = sensors.getTempC(sensorOne);
+if (tempCur < 20) {
+  digitalWrite(relayPin, HIGH);
+}
+if (tempCur > 22) {
+  digitalWrite(relayPin, LOW);
+}
+
 lcd.print(sensors.getTempC(sensorOne));
 delay(1000);
 }
